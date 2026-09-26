@@ -471,8 +471,8 @@ class WorkflowAssetTests(unittest.TestCase):
             "secrets.MIAO_PRODUCTION_EXPECTED_IPS",
             "secrets.MIAO_PROBE_FEISHU_WEBHOOK_URL",
             "secrets.MIAO_PROBE_FEISHU_SECRET",
-            "actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684",
-            "actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684",
+            "actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25",
+            "actions/cache/save@caa296126883cff596d87d8935842f9db880ef25",
             "continue-on-error: true",
             "if: always()",
         ):
