@@ -1,7 +1,9 @@
 import base64
+import contextlib
 import hashlib
 import hmac
 import importlib.util
+import io
 import ipaddress
 import json
 import socket
@@ -171,6 +173,22 @@ class ProductionProbeTests(unittest.TestCase):
                 environment.update(overrides)
                 with self.assertRaises(self.probe.ConfigError):
                     self.probe.load_config(environment)
+
+    def test_configuration_error_log_reports_only_a_safe_category(self):
+        environment = valid_environment()
+        secret_value = environment["MIAO_PROBE_FEISHU_SECRET"]
+        environment["MIAO_PROBE_FEISHU_WEBHOOK_URL"] = "https://example.com/private"
+        output = io.StringIO()
+
+        with contextlib.redirect_stdout(output):
+            exit_code = self.probe.main(environment)
+
+        payload = json.loads(output.getvalue())
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(payload["result"], "configuration_error")
+        self.assertEqual(payload["category"], "Feishu webhook URL is not an approved endpoint")
+        self.assertNotIn("example.com", output.getvalue())
+        self.assertNotIn(secret_value, output.getvalue())
 
     def test_requires_every_dns_answer_to_match_the_server_ip_allowlist(self):
         expected = frozenset({

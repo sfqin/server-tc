@@ -596,10 +596,11 @@ def main(environment: Optional[Mapping[str, str]] = None) -> int:
     try:
         config = load_config(environment)
         return run_cycle(config)
-    except ConfigError:
+    except ConfigError as error:
         _write_log({
             "event": "production_external_probe",
             "result": "configuration_error",
+            "category": str(error),
         })
         return 2
     except StateError:
