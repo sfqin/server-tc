@@ -43,8 +43,9 @@ MIAO_PROBE_FEISHU_WEBHOOK_URL=https://open.feishu.cn/open-apis/bot/v2/hook/真�
 MIAO_PROBE_FEISHU_SECRET=飞书机器人签名密钥
 ```
 
-飞书机器人必须开启签名校验。程序只接受 `open.feishu.cn` 官方 HTTPS Webhook，日志
-不会打印 Webhook、签名密钥或完整 DNS 地址集合。
+飞书机器人必须开启签名校验。程序只接受 `open.feishu.cn` 或
+`open.larkoffice.com` 官方 HTTPS Webhook，日志不会打印 Webhook、签名密钥或完整
+DNS 地址集合。
 
 ## 启用
 

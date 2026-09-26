@@ -35,6 +35,10 @@ TARGET_URL = "https://miao.lvxingzhe.top/readyz"
 TARGET_HOSTNAME = "miao.lvxingzhe.top"
 MAX_RESPONSE_BYTES = 65_536
 USER_AGENT = "miao-github-production-probe/1"
+APPROVED_FEISHU_WEBHOOK_HOSTS = frozenset({
+    "open.feishu.cn",
+    "open.larkoffice.com",
+})
 
 
 class ConfigError(ValueError):
@@ -119,7 +123,7 @@ def _validate_feishu_webhook(url: str) -> None:
         raise ConfigError("Feishu webhook URL is invalid") from error
     if (
         parsed.scheme != "https"
-        or parsed.hostname != "open.feishu.cn"
+        or parsed.hostname not in APPROVED_FEISHU_WEBHOOK_HOSTS
         or port is not None
         or parsed.username is not None
         or parsed.password is not None

@@ -165,6 +165,12 @@ class ProductionProbeTests(unittest.TestCase):
         invalid_overrides.extend([
             {"MIAO_PROBE_FEISHU_SECRET": ""},
             {"MIAO_PROBE_FEISHU_WEBHOOK_URL": "https://example.com/hook"},
+            {
+                "MIAO_PROBE_FEISHU_WEBHOOK_URL": (
+                    "https://open.larkoffice.com.example.com/"
+                    "open-apis/bot/v2/hook/test-token"
+                )
+            },
         ])
 
         for overrides in invalid_overrides:
@@ -173,6 +179,21 @@ class ProductionProbeTests(unittest.TestCase):
                 environment.update(overrides)
                 with self.assertRaises(self.probe.ConfigError):
                     self.probe.load_config(environment)
+
+    def test_accepts_both_official_feishu_webhook_hosts(self):
+        for hostname in ("open.feishu.cn", "open.larkoffice.com"):
+            with self.subTest(hostname=hostname):
+                environment = valid_environment()
+                environment["MIAO_PROBE_FEISHU_WEBHOOK_URL"] = (
+                    f"https://{hostname}/open-apis/bot/v2/hook/test-token"
+                )
+
+                config = self.probe.load_config(environment)
+
+                self.assertEqual(
+                    config.feishu_webhook_url,
+                    environment["MIAO_PROBE_FEISHU_WEBHOOK_URL"],
+                )
 
     def test_configuration_error_log_reports_only_a_safe_category(self):
         environment = valid_environment()
